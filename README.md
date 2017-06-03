@@ -2,7 +2,12 @@
 
 Modificación del plugin "facturacion_base" para añadir varios asientos tipo dentro del asistente, estando actualmente disponibles:
 
-- Modelo 130 (original de facturacion_base)
-- Cuota de autónomos (original de facturacion_base)
-- Traspasos (Asiento basico de traspaso a/desde caja/cuenta)
-- Anticipo a proveedores (Genera el codigo de proveedor en la cuenta 407 si no existe, así como la subcuenta de IVA configurada en impuestos si no existe en la cuenta 472)
+  - Genera asiento del modelo 130 (original de facturacion_base)
+  - Genera asiento de cuota de autónomos (original de facturacion_base)
+  - Genera asiento de Traspasos (Asiento básico de traspaso a/desde caja/cuenta)
+  - Genera asiento de anticipo a proveedores
+  - Genera asiento de nómina y pago de nómina de trabajador por cuenta ajena
+  - Genera asiento de alquiler y pago de alquiler
+
+Cualquier otro asiento que se solicite se añadirá cuando sea posible.
+Licencia LGPL 3
