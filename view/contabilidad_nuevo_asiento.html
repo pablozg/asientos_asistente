@@ -232,10 +232,16 @@
          $("#b_guardar_asiento_r").prop('disabled', false);
       }
    }
-   function guardar_asistente()
+   function guardar_asistente(formulario)
    {
       $("#divisa").prop('disabled', false);
-      document.f_asiento.submit();
+      
+      /// Ya no es necesario, pero se deja como referencia
+      //document.getElementById('divisa_traspasos').value = $('#divisa').val();
+      
+      // Obtiene el nombre el formulario abierto y envia sus datos 
+      var nombre_formulario = formulario.name; 
+    	document.nombre_formulario.submit();
    }
    
    $(document).ready(function() {
@@ -254,6 +260,7 @@
          event.preventDefault();
          buscar_subcuentas();
       });
+      
    });
 </script>
 
@@ -465,246 +472,40 @@
             </div>
            
             <!-- Primera Linea de Asientos -->
-           
+            
             <div class="row">
             	<div class="col-sm-4">
-                  <div class="panel panel-info">
-                     <div class="panel-heading">
-                        <h3 class="panel-title">Traspasos</h3>
-                     </div>
-                     <div class="panel-body">
-                        <div class="form-group">
-                           Importe:
-                           <input type="text" name="traspasos" value="0" class="form-control" autocomplete="off" onclick="document.f_asiento.traspasos.value='0';"/>
-                        </div>
-                        <div class="form-group">
-                           Cuenta Origen:
-                           <select name="bancotras" class="form-control">
-                              <option value="">Caja</option>
-                              <option value="">------</option>
-                              {loop="$fsc->cuenta_banco->all()"}
-                              <option value="{$value->codcuenta}">{$value->descripcion}</option>
-                              {/loop}
-                           </select>
-                        </div>
-                        <div class="form-group">
-                           Cuenta destino:
-                           <select name="destino" class="form-control">
-                              <option value="">Caja</option>
-                              <option value="">------</option>
-                              {loop="$fsc->cuenta_banco->all()"}
-                              <option value="{$value->codcuenta}">{$value->descripcion}</option>
-                              {/loop}
-                           </select>
-                        </div>
-                        <button class="btn btn-sm btn-primary" type="button" onclick="guardar_asistente()">
-                           <i class="fa fa-magic"></i>&nbsp; Generar
-                        </button>
-                     </div>
-                  </div>
-               </div>
-               <div class="col-sm-4">
-                  <div class="panel panel-info">
-                     <div class="panel-heading">
-                        <h3 class="panel-title">Cuota de autónomos</h3>
-                     </div>
-                     <div class="panel-body">
-                        <div class="form-group">
-                           Importe:
-                           <input type="text" name="autonomo" value="0" class="form-control" autocomplete="off" onclick="document.f_asiento.autonomo.value='0';"/>
-                        </div>
-                        <div class="form-group">
-                           Pagar desde:
-                           <select name="banco" class="form-control">
-                              <option value="">Caja</option>
-                              <option value="">------</option>
-                              {loop="$fsc->cuenta_banco->all()"}
-                              <option value="{$value->codsubcuenta}">{$value->descripcion}</option>
-                              {/loop}
-                           </select>
-                        </div>
-                        <button class="btn btn-sm btn-primary" type="button" onclick="guardar_asistente()">
-                           <i class="fa fa-magic"></i>&nbsp; Generar
-                        </button>
-                     </div>
-                  </div>
-               </div>
-               <div class="col-sm-4">
-                  <div class="panel panel-info">
-                     <div class="panel-heading">
-                        <h3 class="panel-title">Pago modelo 130</h3>
-                     </div>
-                     <div class="panel-body">
-                        <div class="form-group">
-                           Importe:
-                           <input type="text" name="modelo130" value="0" class="form-control" autocomplete="off" onclick="document.f_asiento.modelo130.value='0';"/>
-                        </div>
-                        <div class="form-group">
-                           Pagar desde:
-                           <select name="banco130" class="form-control">
-                              <option value="">Caja</option>
-                              <option value="">------</option>
-                              {loop="$fsc->cuenta_banco->all()"}
-                              <option value="{$value->codsubcuenta}">{$value->descripcion}</option>
-                              {/loop}
-                           </select>
-                        </div>                       
-                        <button class="btn btn-sm btn-primary" type="button" onclick="guardar_asistente()">
-                           <i class="fa fa-magic"></i>&nbsp; Generar
-                        </button>
-                     </div>
-                  </div>
-               </div>
+            		 <br>
+            		 <button type="button" class="btn btn-info btn-md btn-block" data-toggle="modal" data-target="#modal_autonomos">Cuota de autónomos</button>          
+              </div>
+              <div class="col-sm-4">
+              	 <br>
+	               <button type="button" class="btn btn-info btn-md btn-block" data-toggle="modal" data-target="#modal_modelo130">Pago modelo 130</button>         
+              </div>
+              <div class="col-sm-4">
+              	 <br>
+	               <button type="button" class="btn btn-info btn-md btn-block" data-toggle="modal" data-target="#modal_traspasos">Traspasos entre cuentas</button>        
+              </div>
             </div>
             
-						<!-- Segunda Linea de Asientos -->
-						
-						<div class="row">
-            	<div class="col-sm-4">
-                  <div class="panel panel-info">
-                     <div class="panel-heading">
-                        <h3 class="panel-title">Anticipos a Proveedores</h3>
-                     </div>
-                     <div class="panel-body">
-                        <div class="form-group">
-                           Importe:
-                           <input type="text" name="anticipos" value="0" class="form-control" autocomplete="off" onclick="document.f_asiento.anticipos.value='0';"/>
-                        </div>
-                        <div class="form-group">
-                           IVA:
-                           <select name="tipoiva" class="form-control">
-                           	  {loop="$fsc->impuesto->all()"}
-                              <option value="{$value->codimpuesto}">{$value->descripcion}</option>
-                              {/loop}
-                           </select>
-                        </div>
-                        <div class="form-group">
-                           Proveedor / Acreedor:
-                           <select name="proveedor" class="form-control">
-                              <option value="">------</option>
-                              {loop="$fsc->proveedor->all()"}
-                              <option value="{$value->codproveedor}">{$value->razonsocial}</option>
-                              {/loop}
-                           </select>
-                        </div>
-                        <div class="form-group">
-                           Pagar desde:
-                           <select name="bancoanticipo" class="form-control">
-                              <option value="">Caja</option>
-                              <option value="">------</option>
-                              {loop="$fsc->cuenta_banco->all()"}
-                              <option value="{$value->codcuenta}">{$value->descripcion}</option>
-                              {/loop}
-                           </select>
-                        </div>
-                        <button class="btn btn-sm btn-primary" type="button" onclick="guardar_asistente()">
-                           <i class="fa fa-magic"></i>&nbsp; Generar
-                        </button>
-                     </div>
-                  </div>
-               </div>
-               <div class="col-sm-4">
-                  <div class="panel panel-info">
-                     <div class="panel-heading">
-                        <h3 class="panel-title">Nómina trabajador cuenta ajena</h3>
-                     </div>
-                     <div class="panel-body">
-                        <div class="form-group">
-                           Salario Bruto:
-                           <input type="text" name="sal_bruto_ajena" value="0" class="form-control" autocomplete="off" onclick="document.f_asiento.sal_bruto_ajena.value='0';"/>
-                        </div>
-                        <div class="form-group">
-                           S.S. a cargo de la empresa (patronal):
-                           <input type="text" name="cuota_patronal" value="0" class="form-control" autocomplete="off" onclick="document.f_asiento.cuota_patronal.value='0';"/>
-                        </div>
-                        <div class="form-group">
-                           S.S. a cargo del trabajador (obrera):
-                           <input type="text" name="cuota_obrera" value="0" class="form-control" autocomplete="off" onclick="document.f_asiento.cuota_obrera.value='0';"/>
-                        </div>
-                        <div class="form-group">
-                           Retenciones por I.R.P.F (%):
-                           <input type="text" name="retenciones_ajena" value="0" class="form-control" autocomplete="off" onclick="document.f_asiento.retenciones_ajena.value='0';"/>
-                        </div>
-                        <div class="form-group">
-                           Trabajador:
-                           <select name="cod_ajena" class="form-control">
-                              <option value="">------</option>
-                              {loop="$fsc->agente->all()"}
-                              <option value="{$value->codagente}">{$value->nombre} {$value->apellidos}</option>
-                              {/loop}
-                           </select>
-                        </div>
-                        <div class="form-group">
-                           Pagar desde:
-                           <select name="banco_nomina_ajena" class="form-control">
-                              <option value="">Caja</option>
-                              <option value="">------</option>
-                              {loop="$fsc->cuenta_banco->all()"}
-                              <option value="{$value->codcuenta}">{$value->descripcion}</option>
-                              {/loop}
-                           </select>
-                        </div>
-                        <button class="btn btn-sm btn-primary" type="button" onclick="guardar_asistente()">
-                           <i class="fa fa-magic"></i>&nbsp; Generar
-                        </button>
-                     </div>
-                  </div>
-               </div>
-               <div class="col-sm-4">
-                  <div class="panel panel-info">
-                     <div class="panel-heading">
-                        <h3 class="panel-title">Pago de alquileres</h3>
-                     </div>
-                     <div class="panel-body">
-                     	  <div class="form-group">
-                           Acreedor:
-                           <select name="acreedor_alquiler" class="form-control">
-                              <option value="">------</option>
-                              {loop="$fsc->proveedor->all()"}
-                              <option value="{$value->codproveedor}">{$value->razonsocial}</option>
-                              {/loop}
-                           </select>
-                        </div>
-                      	<div class="form-group">
-                           Concepto:
-                           <input type="text" name="concepto_alquiler" value="" class="form-control" autocomplete="off" onclick="document.f_asiento.concepto_alquiler.value='';"/>
-                        </div>
-                        <div class="form-group">
-                           Importe Alquiler:
-                           <input type="text" name="importe_alquiler" value="0" class="form-control" autocomplete="off" onclick="document.f_asiento.importe_alquiler.value='0';"/>
-                        </div>
-                        <div class="form-group">
-                           IVA:
-                           <select name="tipoiva_alquiler" class="form-control">
-                           	  {loop="$fsc->impuesto->all()"}
-                              <option value="{$value->codimpuesto}">{$value->descripcion}</option>
-                              {/loop}
-                           </select>
-                        </div>
-                        <div class="form-group">
-                           Retenciones (%):
-                           <input type="text" name="retenciones_alquiler" value="0" class="form-control" autocomplete="off" onclick="document.f_asiento.retenciones_alquiler.value='0';"/>
-                        </div>
-                        <div class="form-group">
-                           Pagar desde:
-                           <select name="banco_alquiler" class="form-control">
-                              <option value="">Caja</option>
-                              <option value="">------</option>
-                              {loop="$fsc->cuenta_banco->all()"}
-                              <option value="{$value->codcuenta}">{$value->descripcion}</option>
-                              {/loop}
-                           </select>
-                        </div>
-                        <button class="btn btn-sm btn-primary" type="button" onclick="guardar_asistente()">
-                           <i class="fa fa-magic"></i>&nbsp; Generar
-                        </button>
-                     </div>
-                  </div>
-               </div>
+            <!-- Segunda Linea de Asientos -->
+            
+            <div class="row">
+            	 <div class="col-sm-4">
+            	 	  <br>
+            	 	  <button type="button" class="btn btn-info btn-md btn-block" data-toggle="modal" data-target="#modal_anticipos">Anticipos a proveedores</button>             
+              </div>
+              <div class="col-sm-4">
+              	  <br>
+              	  <button type="button" class="btn btn-info btn-md btn-block" data-toggle="modal" data-target="#modal_ajena">Nómina trabajador cuenta ajena</button>      
+              </div>
+              <div class="col-sm-4">
+              	  <br>
+              	  <button type="button" class="btn btn-info btn-md btn-block" data-toggle="modal" data-target="#modal_alquiler">Pago de alquileres</button>
+              </div>
             </div>
          </div>
       </div>
-   </div>
 </form>
 
 <form id="f_buscar_subcuentas" name="f_buscar_subcuentas" class="form">
@@ -742,6 +543,319 @@
             </div>
             <div id="subcuentas"></div>
          </div>
+      </div>
+   </div>
+</form>
+
+<form class="form-horizontal" role="form" name="f_autonomos" id="f_autonomos" action="{$fsc->url()}" method="post" onsubmit="return guardar_asistente(this);">
+	 <input type="hidden" name="petition_id" value="{$fsc->random_string()}"/>
+	 <input type="hidden" name="fecha" type="text" value="{$fsc->asiento->fecha}"/>
+	 <input type="hidden" name="concepto" value="{$fsc->asiento->concepto}">
+	 <input type="hidden" name="divisa" value="{$fsc->asiento->coddivisa()}">
+	 <input type="hidden" id="tipo_asiento" name="tipo_asiento" value="1">
+   <div class="modal fade" id="modal_autonomos">
+      <div class="modal-dialog">
+            <div class="panel panel-info">
+                     <div class="panel-heading">
+                        <h3 class="panel-title">Cuota de autónomos
+                        		<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+              				   </h3>
+                     </div>
+                     <div class="modal-body"> 	
+                        <div class="form-group">
+                           &nbsp;&nbsp;Importe:
+                           <input type="text" name="autonomo" value="0" class="form-control" autocomplete="off" onclick="document.f_autonomos.autonomo.value='0';"/>
+                        </div>
+                        <div class="form-group">
+                           &nbsp;&nbsp;Pagar desde:
+                           <select name="banco" class="form-control">
+                              <option value="">Caja</option>
+                              <option value="">------</option>
+                              {loop="$fsc->cuenta_banco->all()"}
+                              <option value="{$value->codsubcuenta}">{$value->descripcion}</option>
+                              {/loop}
+                           </select>
+                        </div>                 
+                     </div>
+                     <div class="modal-footer">
+				               <button class="btn btn-sm btn-primary" type="submit">
+				                   <span class="fa fa-magic""></span>&nbsp; Generar
+			              	 </button>
+          					  </div>
+            </div>
+      </div>
+   </div>
+</form>
+
+<form class="form-horizontal" role="form" name="f_modelo130" id="f_modelo130" action="{$fsc->url()}" method="post" onsubmit="return guardar_asistente(this);">
+	 <input type="hidden" name="petition_id" value="{$fsc->random_string()}"/>
+	 <input type="hidden" name="fecha" type="text" value="{$fsc->asiento->fecha}"/>
+	 <input type="hidden" name="concepto" value="{$fsc->asiento->concepto}">
+	 <input type="hidden" name="divisa" value="{$fsc->asiento->coddivisa()}">
+	 <input type="hidden" id="tipo_asiento" name="tipo_asiento" value="2">
+   <div class="modal fade" id="modal_modelo130">
+      <div class="modal-dialog">
+            <div class="panel panel-info">
+                     <div class="panel-heading">
+                        <h3 class="panel-title">Modelo 130
+                        		<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+              				   </h3>
+                     </div>
+                     <div class="modal-body"> 	
+                        <div class="form-group">
+                            &nbsp;&nbsp;Importe:
+                           <input type="text" name="modelo130" value="0" class="form-control" autocomplete="off" onclick="document.f_modelo130.modelo130.value='0';"/>
+                        </div>
+                        <div class="form-group">
+                            &nbsp;&nbsp;Pagar desde:
+                           <select name="banco130" class="form-control">
+                              <option value="">Caja</option>
+                              <option value="">------</option>
+                              {loop="$fsc->cuenta_banco->all()"}
+                              <option value="{$value->codsubcuenta}">{$value->descripcion}</option>
+                              {/loop}
+                           </select>
+                        </div>                       
+                     </div>
+                     <div class="modal-footer">
+				               <button class="btn btn-sm btn-primary" type="submit">
+				                   <span class="fa fa-magic""></span>&nbsp; Generar
+			              	 </button>
+          					  </div>
+            </div>
+      </div>
+   </div>
+</form>
+
+<form class="form-horizontal" role="form" name="f_traspasos" id="f_traspasos" action="{$fsc->url()}" method="post" onsubmit="return guardar_asistente(this);">
+	 <input type="hidden" name="petition_id" value="{$fsc->random_string()}"/>
+	 <input type="hidden" name="fecha" type="text" value="{$fsc->asiento->fecha}"/>
+	 <input type="hidden" name="concepto" value="{$fsc->asiento->concepto}">
+	 <input type="hidden" name="divisa" value="{$fsc->asiento->coddivisa()}">
+	 <input type="hidden" id="tipo_asiento" name="tipo_asiento" value="3">
+   <div class="modal fade" id="modal_traspasos">
+      <div class="modal-dialog">
+            <div class="panel panel-info">
+                     <div class="panel-heading">
+                        <h3 class="panel-title">Traspasos
+                        		<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+              				   </h3>
+                     </div>
+                     <div class="modal-body"> 	
+                        <div class="form-group">
+                        	 &nbsp;&nbsp;Importe:
+                          <input type="text" name="traspasos" value="0" class="form-control" autocomplete="off" onclick="document.f_traspasos.traspasos.value='0';"/>
+                        </div>
+                        <div class="form-group">
+                            &nbsp;&nbsp;Cuenta Origen:
+                           <select name="bancotras" class="form-control">
+                              <option value="">Caja</option>
+                              <option value="">------</option>
+                              {loop="$fsc->cuenta_banco->all()"}
+                              <option value="{$value->codcuenta}">{$value->descripcion}</option>
+                              {/loop}
+                           </select>
+                        </div>
+                        <div class="form-group">
+                            &nbsp;&nbsp;Cuenta destino:
+                           <select name="destino" class="form-control">
+                              <option value="">Caja</option>
+                              <option value="">------</option>
+                              {loop="$fsc->cuenta_banco->all()"}
+                              <option value="{$value->codcuenta}">{$value->descripcion}</option>
+                              {/loop}
+                           </select>
+                        </div>                        
+                     </div>
+                     <div class="modal-footer">
+			              	 <button class="btn btn-sm btn-primary" type="submit">
+				                   <span class="fa fa-magic""></span>&nbsp; Generar
+			              	 </button>
+          					 </div>
+            </div>
+      </div>
+   </div>
+</form>
+
+<form class="form-horizontal" role="form" name="f_anticipos" id="f_anticipos" action="{$fsc->url()}" method="post" onsubmit="return guardar_asistente(this);">
+	 <input type="hidden" name="petition_id" value="{$fsc->random_string()}"/>
+	 <input type="hidden" name="fecha" type="text" value="{$fsc->asiento->fecha}"/>
+	 <input type="hidden" name="concepto" value="{$fsc->asiento->concepto}">
+	 <input type="hidden" name="divisa" value="{$fsc->asiento->coddivisa()}">
+	 <input type="hidden" id="tipo_asiento" name="tipo_asiento" value="4">
+   <div class="modal fade" id="modal_anticipos">
+      <div class="modal-dialog">
+            <div class="panel panel-info">
+                     <div class="panel-heading">
+                        <h3 class="panel-title">Anticipos a proveedores
+                        		<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+              				   </h3>
+                     </div>
+                     <div class="modal-body"> 	
+                        <div class="form-group">
+                            &nbsp;&nbsp;Importe:
+                           <input type="text" name="anticipos" value="0" class="form-control" autocomplete="off" onclick="document.f_anticipos.anticipos.value='0';"/>
+                        </div>
+                        <div class="form-group">
+                            &nbsp;&nbsp;IVA:
+                           <select name="tipoiva" class="form-control">
+                           	  {loop="$fsc->impuesto->all()"}
+                              <option value="{$value->codimpuesto}">{$value->descripcion}</option>
+                              {/loop}
+                           </select>
+                        </div>
+                        <div class="form-group">
+                            &nbsp;&nbsp;Proveedor / Acreedor:
+                           <select name="proveedor" class="form-control">
+                              <option value="">------</option>
+                              {loop="$fsc->proveedor->all()"}
+                              <option value="{$value->codproveedor}">{$value->razonsocial}</option>
+                              {/loop}
+                           </select>
+                        </div>
+                        <div class="form-group">
+                            &nbsp;&nbsp;Pagar desde:
+                           <select name="bancoanticipo" class="form-control">
+                              <option value="">Caja</option>
+                              <option value="">------</option>
+                              {loop="$fsc->cuenta_banco->all()"}
+                              <option value="{$value->codcuenta}">{$value->descripcion}</option>
+                              {/loop}
+                           </select>
+                        </div>
+                     </div>
+                     <div class="modal-footer">
+			              	 <button class="btn btn-sm btn-primary" type="submit">
+				                   <span class="fa fa-magic""></span>&nbsp; Generar
+			              	 </button>
+          					 </div>
+            </div>
+      </div>
+   </div>
+</form>
+
+<form class="form-horizontal" role="form" name="f_ajena" id="f_ajena" action="{$fsc->url()}" method="post" onsubmit="return guardar_asistente(this);">
+	 <input type="hidden" name="petition_id" value="{$fsc->random_string()}"/>
+	 <input type="hidden" name="fecha" type="text" value="{$fsc->asiento->fecha}"/>
+	 <input type="hidden" name="concepto" value="{$fsc->asiento->concepto}">
+	 <input type="hidden" name="divisa" value="{$fsc->asiento->coddivisa()}">
+	 <input type="hidden" id="tipo_asiento" name="tipo_asiento" value="5">
+   <div class="modal fade" id="modal_ajena">
+      <div class="modal-dialog">
+            <div class="panel panel-info">
+                     <div class="panel-heading">
+                        <h3 class="panel-title">Nómina trabajador cuenta ajena
+                        		<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+              				   </h3>
+                     </div>
+                     <div class="modal-body"> 	
+                        <div class="form-group">
+                            &nbsp;&nbsp;Salario Bruto:
+                           <input type="text" name="sal_bruto_ajena" value="0" class="form-control" autocomplete="off" onclick="document.f_ajena.sal_bruto_ajena.value='0';"/>
+                        </div>
+                        <div class="form-group">
+                            &nbsp;&nbsp;S.S. a cargo de la empresa (patronal):
+                           <input type="text" name="cuota_patronal" value="0" class="form-control" autocomplete="off" onclick="document.f_ajena.cuota_patronal.value='0';"/>
+                        </div>
+                        <div class="form-group">
+                            &nbsp;&nbsp;S.S. a cargo del trabajador (obrera):
+                           <input type="text" name="cuota_obrera" value="0" class="form-control" autocomplete="off" onclick="document.f_ajena.cuota_obrera.value='0';"/>
+                        </div>
+                        <div class="form-group">
+                            &nbsp;&nbsp;Retenciones por I.R.P.F (%):
+                           <input type="text" name="retenciones_ajena" value="0" class="form-control" autocomplete="off" onclick="document.f_ajena.retenciones_ajena.value='0';"/>
+                        </div>
+                        <div class="form-group">
+                            &nbsp;&nbsp;Trabajador:
+                           <select name="cod_ajena" class="form-control">
+                              <option value="">------</option>
+                              {loop="$fsc->agente->all()"}
+                              <option value="{$value->codagente}">{$value->nombre} {$value->apellidos}</option>
+                              {/loop}
+                           </select>
+                        </div>
+                        <div class="form-group">
+                            &nbsp;&nbsp;Pagar desde:
+                           <select name="banco_nomina_ajena" class="form-control">
+                              <option value="">Caja</option>
+                              <option value="">------</option>
+                              {loop="$fsc->cuenta_banco->all()"}
+                              <option value="{$value->codcuenta}">{$value->descripcion}</option>
+                              {/loop}
+                           </select>
+                        </div>
+                     </div>
+                     <div class="modal-footer">
+			              	 <button class="btn btn-sm btn-primary" type="submit">
+				                   <span class="fa fa-magic""></span>&nbsp; Generar
+			              	 </button>
+          					 </div>
+            </div>
+      </div>
+   </div>
+</form>
+
+<form class="form-horizontal" role="form" name="f_alquiler" id="f_alquiler" action="{$fsc->url()}" method="post" onsubmit="return guardar_asistente(this);">
+	 <input type="hidden" name="petition_id" value="{$fsc->random_string()}"/>
+	 <input type="hidden" name="fecha" type="text" value="{$fsc->asiento->fecha}"/>
+	 <input type="hidden" name="concepto" value="{$fsc->asiento->concepto}">
+	 <input type="hidden" name="divisa" value="{$fsc->asiento->coddivisa()}">
+	 <input type="hidden" id="tipo_asiento" name="tipo_asiento" value="6">
+   <div class="modal fade" id="modal_alquiler">
+      <div class="modal-dialog">
+            <div class="panel panel-info">
+                     <div class="panel-heading">
+                        <h3 class="panel-title">Pago de alquileres
+                        		<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+              				   </h3>
+                     </div>
+                     <div class="modal-body"> 	
+                        <div class="form-group">
+                            &nbsp;&nbsp;Acreedor:
+                           <select name="acreedor_alquiler" class="form-control">
+                              <option value="">------</option>
+                              {loop="$fsc->proveedor->all()"}
+                              <option value="{$value->codproveedor}">{$value->razonsocial}</option>
+                              {/loop}
+                           </select>
+                        </div>
+                      	<div class="form-group">
+                            &nbsp;&nbsp;Concepto:
+                           <input type="text" name="concepto_alquiler" value="" class="form-control" autocomplete="off" onclick="document.f_alquiler.concepto_alquiler.value='';"/>
+                        </div>
+                        <div class="form-group">
+                            &nbsp;&nbsp;Importe Alquiler:
+                           <input type="text" name="importe_alquiler" value="0" class="form-control" autocomplete="off" onclick="document.f_alquiler.importe_alquiler.value='0';"/>
+                        </div>
+                        <div class="form-group">
+                            &nbsp;&nbsp;IVA:
+                           <select name="tipoiva_alquiler" class="form-control">
+                           	  {loop="$fsc->impuesto->all()"}
+                              <option value="{$value->codimpuesto}">{$value->descripcion}</option>
+                              {/loop}
+                           </select>
+                        </div>
+                        <div class="form-group">
+                            &nbsp;&nbsp;Retenciones (%):
+                           <input type="text" name="retenciones_alquiler" value="0" class="form-control" autocomplete="off" onclick="document.f_alquiler.retenciones_alquiler.value='0';"/>
+                        </div>
+                        <div class="form-group">
+                            &nbsp;&nbsp;Pagar desde:
+                           <select name="banco_alquiler" class="form-control">
+                              <option value="">Caja</option>
+                              <option value="">------</option>
+                              {loop="$fsc->cuenta_banco->all()"}
+                              <option value="{$value->codcuenta}">{$value->descripcion}</option>
+                              {/loop}
+                           </select>
+                        </div>
+                     </div>
+                     <div class="modal-footer">
+			              	 <button class="btn btn-sm btn-primary" type="submit">
+				                   <span class="fa fa-magic""></span>&nbsp; Generar
+			              	 </button>
+          					 </div>
+            </div>
       </div>
    </div>
 </form>

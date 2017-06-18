@@ -9,5 +9,5 @@ Modificación del plugin "facturacion_base" para añadir varios asientos tipo de
   - Genera asiento de nómina y pago de nómina de trabajador por cuenta ajena
   - Genera asiento de alquiler y pago de alquiler
 
-Cualquier otro asiento que se solicite se añadirá cuando sea posible.
+Cualquier otro asiento que se solicite se añadirá lo antes posible.
 Licencia LGPL 3
