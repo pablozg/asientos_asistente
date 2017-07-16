@@ -549,7 +549,6 @@
 
 <form class="form-horizontal" role="form" name="f_autonomos" id="f_autonomos" action="{$fsc->url()}" method="post" onsubmit="return guardar_asistente(this);">
 	 <input type="hidden" name="petition_id" value="{$fsc->random_string()}"/>
-	 <input type="hidden" name="fecha" type="text" value="{$fsc->asiento->fecha}"/>
 	 <input type="hidden" name="concepto" value="{$fsc->asiento->concepto}">
 	 <input type="hidden" name="divisa" value="{$fsc->asiento->coddivisa()}">
 	 <input type="hidden" id="tipo_asiento" name="tipo_asiento" value="1">
@@ -561,7 +560,11 @@
                         		<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
               				   </h3>
                      </div>
-                     <div class="modal-body"> 	
+                     <div class="modal-body">
+                         <div class="form-group">
+                            Fecha:
+                            <input class="form-control datepicker" name="fecha" type="text" value="{$fsc->asiento->fecha}"/>
+                        </div>
                         <div class="form-group">
                            &nbsp;&nbsp;Importe:
                            <input type="text" name="autonomo" value="0" class="form-control" autocomplete="off" onclick="document.f_autonomos.autonomo.value='0';"/>
@@ -589,7 +592,6 @@
 
 <form class="form-horizontal" role="form" name="f_modelo130" id="f_modelo130" action="{$fsc->url()}" method="post" onsubmit="return guardar_asistente(this);">
 	 <input type="hidden" name="petition_id" value="{$fsc->random_string()}"/>
-	 <input type="hidden" name="fecha" type="text" value="{$fsc->asiento->fecha}"/>
 	 <input type="hidden" name="concepto" value="{$fsc->asiento->concepto}">
 	 <input type="hidden" name="divisa" value="{$fsc->asiento->coddivisa()}">
 	 <input type="hidden" id="tipo_asiento" name="tipo_asiento" value="2">
@@ -601,7 +603,11 @@
                         		<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
               				   </h3>
                      </div>
-                     <div class="modal-body"> 	
+                     <div class="modal-body">
+                         <div class="form-group">
+                            Fecha:
+                            <input class="form-control datepicker" name="fecha" type="text" value="{$fsc->asiento->fecha}"/>
+                        </div>
                         <div class="form-group">
                             &nbsp;&nbsp;Importe:
                            <input type="text" name="modelo130" value="0" class="form-control" autocomplete="off" onclick="document.f_modelo130.modelo130.value='0';"/>
@@ -628,8 +634,7 @@
 </form>
 
 <form class="form-horizontal" role="form" name="f_traspasos" id="f_traspasos" action="{$fsc->url()}" method="post" onsubmit="return guardar_asistente(this);">
-	 <input type="hidden" name="petition_id" value="{$fsc->random_string()}"/>
-	 <input type="hidden" name="fecha" type="text" value="{$fsc->asiento->fecha}"/>
+	 <input type="hidden" name="petition_id" value="{$fsc->random_string()}"/> 
 	 <input type="hidden" name="concepto" value="{$fsc->asiento->concepto}">
 	 <input type="hidden" name="divisa" value="{$fsc->asiento->coddivisa()}">
 	 <input type="hidden" id="tipo_asiento" name="tipo_asiento" value="3">
@@ -641,7 +646,11 @@
                         		<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
               				   </h3>
                      </div>
-                     <div class="modal-body"> 	
+                     <div class="modal-body"> 
+                        <div class="form-group">
+                            Fecha:
+                            <input class="form-control datepicker" name="fecha" type="text" value="{$fsc->asiento->fecha}"/>
+                        </div>
                         <div class="form-group">
                         	 &nbsp;&nbsp;Importe:
                           <input type="text" name="traspasos" value="0" class="form-control" autocomplete="off" onclick="document.f_traspasos.traspasos.value='0';"/>
@@ -679,7 +688,6 @@
 
 <form class="form-horizontal" role="form" name="f_anticipos" id="f_anticipos" action="{$fsc->url()}" method="post" onsubmit="return guardar_asistente(this);">
 	 <input type="hidden" name="petition_id" value="{$fsc->random_string()}"/>
-	 <input type="hidden" name="fecha" type="text" value="{$fsc->asiento->fecha}"/>
 	 <input type="hidden" name="concepto" value="{$fsc->asiento->concepto}">
 	 <input type="hidden" name="divisa" value="{$fsc->asiento->coddivisa()}">
 	 <input type="hidden" id="tipo_asiento" name="tipo_asiento" value="4">
@@ -691,7 +699,11 @@
                         		<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
               				   </h3>
                      </div>
-                     <div class="modal-body"> 	
+                     <div class="modal-body">
+                        <div class="form-group">
+                            Fecha:
+                            <input class="form-control datepicker" name="fecha" type="text" value="{$fsc->asiento->fecha}"/>
+                        </div>
                         <div class="form-group">
                             &nbsp;&nbsp;Importe:
                            <input type="text" name="anticipos" value="0" class="form-control" autocomplete="off" onclick="document.f_anticipos.anticipos.value='0';"/>
@@ -736,7 +748,6 @@
 
 <form class="form-horizontal" role="form" name="f_ajena" id="f_ajena" action="{$fsc->url()}" method="post" onsubmit="return guardar_asistente(this);">
 	 <input type="hidden" name="petition_id" value="{$fsc->random_string()}"/>
-	 <input type="hidden" name="fecha" type="text" value="{$fsc->asiento->fecha}"/>
 	 <input type="hidden" name="concepto" value="{$fsc->asiento->concepto}">
 	 <input type="hidden" name="divisa" value="{$fsc->asiento->coddivisa()}">
 	 <input type="hidden" id="tipo_asiento" name="tipo_asiento" value="5">
@@ -748,7 +759,11 @@
                         		<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
               				   </h3>
                      </div>
-                     <div class="modal-body"> 	
+                     <div class="modal-body">
+                        <div class="form-group">
+                            Fecha:
+                            <input class="form-control datepicker" name="fecha" type="text" value="{$fsc->asiento->fecha}"/>
+                        </div>
                         <div class="form-group">
                             &nbsp;&nbsp;Salario Bruto:
                            <input type="text" name="sal_bruto_ajena" value="0" class="form-control" autocomplete="off" onclick="document.f_ajena.sal_bruto_ajena.value='0';"/>
@@ -797,7 +812,6 @@
 
 <form class="form-horizontal" role="form" name="f_alquiler" id="f_alquiler" action="{$fsc->url()}" method="post" onsubmit="return guardar_asistente(this);">
 	 <input type="hidden" name="petition_id" value="{$fsc->random_string()}"/>
-	 <input type="hidden" name="fecha" type="text" value="{$fsc->asiento->fecha}"/>
 	 <input type="hidden" name="concepto" value="{$fsc->asiento->concepto}">
 	 <input type="hidden" name="divisa" value="{$fsc->asiento->coddivisa()}">
 	 <input type="hidden" id="tipo_asiento" name="tipo_asiento" value="6">
@@ -809,7 +823,11 @@
                         		<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
               				   </h3>
                      </div>
-                     <div class="modal-body"> 	
+                     <div class="modal-body">
+                        <div class="form-group">
+                            Fecha:
+                            <input class="form-control datepicker" name="fecha" type="text" value="{$fsc->asiento->fecha}"/>
+                        </div>
                         <div class="form-group">
                             &nbsp;&nbsp;Acreedor:
                            <select name="acreedor_alquiler" class="form-control">

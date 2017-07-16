@@ -867,7 +867,6 @@ class contabilidad_nuevo_asiento extends fs_controller {
                 $this->new_error_msg("¡Imposible guardar el asiento!");
             }
 
-            
             /// asiento pago de la nómina
 
             $asiento = new asiento();
