@@ -1,7 +1,11 @@
 {include="header"}
 
+<script type="text/javascript" src="{$fsc->get_js_location('contabilidad_asiento.js')}"></script>
 <script type="text/javascript">
-   var numlineas = {function="count($fsc->lineas)"};
+   numlineas = {function="count($fsc->lineas)"};
+   fsc_url = '{$fsc->url()}';
+   fs_nf0 = {#FS_NF0#};
+   
    function add_partida()
    {
       numlineas++;
@@ -53,127 +57,6 @@
       </tr>");
       document.f_asiento.numlineas.value = numlineas;
       recalcular();
-   }
-   function show_buscar_subcuentas(num, tipo)
-   {
-      $("#subcuentas").html('');
-      document.f_buscar_subcuentas.fecha.value = document.f_asiento.fecha.value;
-      document.f_buscar_subcuentas.tipo.value = tipo;
-      document.f_buscar_subcuentas.numlinea.value = num;
-      document.f_buscar_subcuentas.query.value = '';
-      $("#modal_subcuentas").modal('show');
-      document.f_buscar_subcuentas.query.focus();
-   }
-   function buscar_subcuentas()
-   {
-      if(document.f_buscar_subcuentas.query.value == '')
-      {
-         $("#subcuentas").html('');
-      }
-      else
-      {
-         var datos = 'query='+document.f_buscar_subcuentas.query.value;
-         datos += "&fecha="+document.f_buscar_subcuentas.fecha.value;
-         $.ajax({
-            type: 'POST',
-            url: '{$fsc->url()}',
-            dataType: 'html',
-            data: datos,
-            success: function(datos) {
-               var re = /<!--(.*?)-->/g;
-               var m = re.exec( datos );
-               if( m[1] == document.f_buscar_subcuentas.query.value )
-               {
-                  $("#subcuentas").html(datos);
-               }
-            }
-         });
-      }
-   }
-   function select_subcuenta(codsubcuenta, saldo, descripcion)
-   {
-      var num = document.f_buscar_subcuentas.numlinea.value;
-      if(document.f_buscar_subcuentas.tipo.value == 'subcuenta')
-      {
-         $("#codsubcuenta_"+num).val(codsubcuenta);
-         $("#desc_"+num).val( Base64.decode(descripcion) );
-         $("#saldo_"+num).val(saldo);
-      }
-      else
-      {
-         $("#codcontrapartida_"+num).val(codsubcuenta);
-         $("#saldoc_"+num).val(saldo);
-      }
-      $("#modal_subcuentas").modal('hide');
-      recalcular();
-   }
-   function clean_partida(num)
-   {
-      $("#partida_"+num).remove();
-      recalcular();
-   }
-   function recalcular()
-   {
-      var debe = 0;
-      var haber = 0;
-      var iva = 0;
-      var t_debe = 0;
-      var t_haber = 0;
-      var show_contrapartidas = false;
-      
-      for(var i=1; i<=numlineas; i++)
-      {
-         if( $("#partida_"+i).length > 0 )
-         {
-            debe = parseFloat( $("#debe_"+i).val() );
-            haber = parseFloat( $("#haber_"+i).val() );
-            
-            if( $("#codcontrapartida_"+i).val() != '' )
-            {
-               show_contrapartidas = true;
-               
-               iva = parseFloat( $("#iva_"+i).val() );
-               if(iva == 0)
-               {
-                  $("#baseimp_"+i).val('0');
-               }
-               else
-               {
-                  if(haber == 0)
-                  {
-                     $("#baseimp_"+i).val( debe*100/iva );
-                  }
-                  else if(debe == 0)
-                  {
-                     $("#baseimp_"+i).val( haber*100/iva );
-                  }
-                  else
-                  {
-                     $("#baseimp_"+i).val(0);
-                  }
-               }
-            }
-            
-            t_debe += debe;
-            t_haber += haber;
-         }
-      }
-      
-      document.f_asiento.importe.value = Math.max(t_debe, t_haber);
-      document.f_asiento.descuadre.value = fs_round(t_debe - t_haber, 2);
-      
-      if(show_contrapartidas)
-      {
-         $(".contrapartida").show();
-      }
-      else
-      {
-         $(".contrapartida").hide();
-      }
-   }
-   function asigna_concepto()
-   {
-      document.f_asiento.concepto.value = $("#s_idconceptopar option:selected").text();
    }
    function guardar_asiento(redir)
    {
@@ -240,10 +123,9 @@
       //document.getElementById('divisa_traspasos').value = $('#divisa').val();
       
       // Obtiene el nombre el formulario abierto y envia sus datos 
-      var nombre_formulario = formulario.name; 
-    	document.nombre_formulario.submit();
+      //var nombre_formulario = formulario.name; 
+    	document.formulario.name.submit();
    }
-   
    $(document).ready(function() {
       recalcular();
       
@@ -260,7 +142,6 @@
          event.preventDefault();
          buscar_subcuentas();
       });
-      
    });
 </script>
 
@@ -295,7 +176,7 @@
         <div class="row">
             <div class="col-lg-2 col-md-2 col-sm-2">
                 <div class="form-group">
-                    &nbsp;&nbsp;Fecha:
+                    Fecha:
                     <input class="form-control datepicker" name="fecha" type="text" value="{$fsc->asiento->fecha}"/>
                 </div>
             </div>
@@ -384,7 +265,7 @@
                             <td>
                                 <input class="form-control" id='codsubcuenta_{$counter+1}' name='codsubcuenta_{$counter+1}' type='text'
                                        value="{$value->codsubcuenta}" onclick="show_buscar_subcuentas('{$counter+1}', 'subcuenta')"
-                                       onkeyup='document.f_buscar_subcuentas.query.value = $(this).val(); buscar_subcuentas()'
+                                       onkeyup='document.f_buscar_subcuentas.query.value = $(this).val();buscar_subcuentas()'
                                        autocomplete='off' placeholder='Seleccionar'/>
                             </td>
                             <td><input class='form-control' type='text' id='desc_{$counter+1}' name='desc_{$counter+1}' value='{$value->desc_subcuenta}' disabled='disabled'/></td>
@@ -403,7 +284,7 @@
                             <td>
                                 <input class='form-control' id='codcontrapartida_{$counter+1}' name='codcontrapartida_{$counter+1}' type='text'
                                        value='{$value->codcontrapartida}' onclick="show_buscar_subcuentas('{$counter+1}', 'contrapartida')"
-                                       onkeyup='document.f_buscar_subcuentas.query.value = $(this).val(); buscar_subcuentas()'
+                                       onkeyup='document.f_buscar_subcuentas.query.value = $(this).val();buscar_subcuentas()'
                                        autocomplete='off' placeholder='Seleccionar'/>
                             </td>
                             <td class="contrapartida">
@@ -441,7 +322,7 @@
             <div class="container-fluid">
                 <div class="row">
                     <div class="col-xs-6">
-                        <a href="#" class="btn btn-sm btn-success" onclick="add_partida(); return false;">
+                        <a href="#" class="btn btn-sm btn-success" onclick="add_partida();return false;">
                             <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
                             <span class="hidden-xs">&nbsp; Añadir línea</span>
                         </a>
@@ -534,7 +415,7 @@
                                 </div>
                             </div>
                             <div class="col-xs-4">
-                                <a href="#" class="btn btn-sm btn-block btn-danger" onclick="select_subcuenta('','','')">
+                                <a href="#" class="btn btn-sm btn-block btn-danger" onclick="select_subcuenta('', '', '')">
                                     <span class="glyphicon glyphicon-remove"></span>
                                     <span class="hidden-xs">&nbsp; ninguna</span>
                                 </a>
@@ -568,7 +449,7 @@
                     </div>
                     <div class="form-group">
                         &nbsp;&nbsp;Importe:
-                        <input type="text" name="autonomo" value="0" class="form-control" autocomplete="off" onclick="document.f_autonomos.autonomo.value='0';"/>
+                        <input type="text" name="autonomo" value="0" class="form-control" autocomplete="off" onclick="document.f_autonomos.autonomo.value='0';" onchange="this.value=this.value.split(',').join('.');"/>
                     </div>
                     <div class="form-group">
                         &nbsp;&nbsp;Pagar desde:
@@ -611,7 +492,7 @@
                     </div>
                     <div class="form-group">
                         &nbsp;&nbsp;Importe:
-                        <input type="text" name="modelo130" value="0" class="form-control" autocomplete="off" onclick="document.f_modelo130.modelo130.value='0';"/>
+                        <input type="text" name="modelo130" value="0" class="form-control" autocomplete="off" onclick="document.f_modelo130.modelo130.value='0';" onchange="this.value=this.value.split(',').join('.');"/>
                     </div>
                     <div class="form-group">
                         &nbsp;&nbsp;Pagar desde:
@@ -654,7 +535,7 @@
                     </div>
                     <div class="form-group">
                         &nbsp;&nbsp;Importe:
-                        <input type="text" name="traspasos" value="0" class="form-control" autocomplete="off" onclick="document.f_traspasos.traspasos.value='0';"/>
+                        <input type="text" name="traspasos" value="0" class="form-control" autocomplete="off" onclick="document.f_traspasos.traspasos.value='0';" onchange="this.value=this.value.split(',').join('.');"/>
                     </div>
                     <div class="form-group">
                         &nbsp;&nbsp;Cuenta Origen:
@@ -707,7 +588,7 @@
                     </div>
                     <div class="form-group">
                         &nbsp;&nbsp;Importe:
-                        <input type="text" name="anticipos" value="0" class="form-control" autocomplete="off" onclick="document.f_anticipos.anticipos.value='0';"/>
+                        <input type="text" name="anticipos" value="0" class="form-control" autocomplete="off" onclick="document.f_anticipos.anticipos.value='0';"  onchange="this.value=this.value.split(',').join('.');"/>
                     </div>
                     <div class="form-group">
                         &nbsp;&nbsp;IVA:
@@ -767,19 +648,19 @@
                     </div>
                     <div class="form-group">
                         &nbsp;&nbsp;Salario Bruto:
-                        <input type="text" name="sal_bruto_ajena" value="0" class="form-control" autocomplete="off" onclick="document.f_ajena.sal_bruto_ajena.value='0';"/>
+                        <input type="text" name="sal_bruto_ajena" value="0" class="form-control" autocomplete="off" onclick="document.f_ajena.sal_bruto_ajena.value='0';" onchange="this.value=this.value.split(',').join('.');"/>
                     </div>
                     <div class="form-group">
                         &nbsp;&nbsp;S.S. a cargo de la empresa (patronal):
-                        <input type="text" name="cuota_patronal" value="0" class="form-control" autocomplete="off" onclick="document.f_ajena.cuota_patronal.value='0';"/>
+                        <input type="text" name="cuota_patronal" value="0" class="form-control" autocomplete="off" onclick="document.f_ajena.cuota_patronal.value='0';" onchange="this.value=this.value.split(',').join('.');"/>
                     </div>
                     <div class="form-group">
                         &nbsp;&nbsp;S.S. a cargo del trabajador (obrera):
-                        <input type="text" name="cuota_obrera" value="0" class="form-control" autocomplete="off" onclick="document.f_ajena.cuota_obrera.value='0';"/>
+                        <input type="text" name="cuota_obrera" value="0" class="form-control" autocomplete="off" onclick="document.f_ajena.cuota_obrera.value='0';" onchange="this.value=this.value.split(',').join('.');"/>
                     </div>
                     <div class="form-group">
                         &nbsp;&nbsp;Retenciones por I.R.P.F (%):
-                        <input type="text" name="retenciones_ajena" value="0" class="form-control" autocomplete="off" onclick="document.f_ajena.retenciones_ajena.value='0';"/>
+                        <input type="text" name="retenciones_ajena" value="0" class="form-control" autocomplete="off" onclick="document.f_ajena.retenciones_ajena.value='0';" onchange="this.value=this.value.split(',').join('.');"/>
                     </div>
                     <div class="form-group">
                         &nbsp;&nbsp;Trabajador:
@@ -844,7 +725,7 @@
                     </div>
                     <div class="form-group">
                         &nbsp;&nbsp;Importe Alquiler:
-                        <input type="text" name="importe_alquiler" value="0" class="form-control" autocomplete="off" onclick="document.f_alquiler.importe_alquiler.value='0';"/>
+                        <input type="text" name="importe_alquiler" value="0" class="form-control" autocomplete="off" onclick="document.f_alquiler.importe_alquiler.value='0';" onchange="this.value=this.value.split(',').join('.');"/>
                     </div>
                     <div class="form-group">
                         &nbsp;&nbsp;IVA:
@@ -856,7 +737,7 @@
                     </div>
                     <div class="form-group">
                         &nbsp;&nbsp;Retenciones (%):
-                        <input type="text" name="retenciones_alquiler" value="0" class="form-control" autocomplete="off" onclick="document.f_alquiler.retenciones_alquiler.value='0';"/>
+                        <input type="text" name="retenciones_alquiler" value="0" class="form-control" autocomplete="off" onclick="document.f_alquiler.retenciones_alquiler.value='0';" onchange="this.value=this.value.split(',').join('.');"/>
                     </div>
                     <div class="form-group">
                         &nbsp;&nbsp;Pagar desde:
